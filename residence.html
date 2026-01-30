@@ -59,14 +59,14 @@
         }
 
         .image-column img {
-            max-width: 100%;
-            max-height: 80vh;
+            max-width: 85%;
+            max-height: 65vh;
             object-fit: contain;
             transition: opacity 0.3s ease-in-out;
             opacity: 0;
         }
         .image-column img.loaded {
-            opacity: 1;
+            opacity: 0.9;
         }
 
         .block {
@@ -212,7 +212,7 @@
                 padding: 60px 20px 0;
             }
             .image-column img {
-                max-height: 45vh;
+                max-height: 35vh;
             }
         }
     </style>
@@ -254,7 +254,7 @@
             </div>
 
             <div class="block">
-                <a href="mailto:sauna@lynbitcoin.com" class="link">sauna@lynbitcoin.com</a>
+                <a href="/cdn-cgi/l/email-protection#a4d7c5d1cac5e4c8ddcac6cdd0c7cbcdca8ac7cbc9" class="link"><span class="__cf_email__" data-cfemail="304351455e51705c495e525944535f595e1e535f5d">[email&#160;protected]</span></a>
             </div>
         </div>
 
@@ -283,7 +283,7 @@
         <button class="theme-btn" onclick="toggleTheme()" id="themeBtn"></button>
     </nav>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const navMenu = document.getElementById('navMenu');
         const navTrigger = document.querySelector('.nav-trigger');
 
@@ -316,13 +316,4 @@
         updateThemeBtn();
 
         // Smooth image loading
-        document.querySelectorAll('img').forEach(img => {
-            if (img.complete) {
-                img.classList.add('loaded');
-            } else {
-                img.addEventListener('load', () => img.classList.add('loaded'));
-            }
-        });
-    </script>
-</body>
-</html>
+        document.querySelectorAll('img').forEach
