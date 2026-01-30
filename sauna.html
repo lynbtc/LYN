@@ -328,6 +328,11 @@
             opacity: 0.6;
         }
 
+        /* Hide mobile images on desktop */
+        .module-mobile-img {
+            display: none;
+        }
+
         @media (max-width: 900px) {
             .container {
                 flex-direction: column-reverse;
@@ -352,7 +357,7 @@
             }
             .modal-list {
                 max-width: 100%;
-                padding: 60px 24px 100px;
+                padding: 60px 24px 140px;
                 justify-content: flex-start;
                 overflow-y: auto;
             }
@@ -402,10 +407,6 @@
             [data-theme="dark"] .module-mobile-img img {
                 filter: invert(1) brightness(1.15);
             }
-        }
-        /* Hide mobile images on desktop */
-        .module-mobile-img {
-            display: none;
         }
     </style>
     <script>
