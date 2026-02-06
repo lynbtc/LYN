@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LYN. — Invest</title>
+    <meta name="description" content="2,100 units. Distributed hashrate. One architectural standard.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='white'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:wght@300;400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #fafafa; --text: #0a0a0a; --muted: #737373; --border: #e5e5e5; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; scroll-behavior: smooth; }
+        body { font-family: 'IBM Plex Sans', -apple-system, sans-serif; font-weight: 300; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+
+        /* Gate */
+        #gate { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        #gate.hidden { display: none; }
+        .gate-content { text-align: center; max-width: 320px; padding: 2rem; }
+        .gate-content h1 { font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.03em; margin-bottom: 2rem; }
+        .gate-content input { width: 100%; padding: 0.875rem 1rem; background: transparent; border: 1px solid var(--border); color: var(--text); font-family: 'IBM Plex Mono', monospace; font-size: 0.875rem; text-align: center; letter-spacing: 0.1em; margin-bottom: 1rem; }
+        .gate-content input:focus { outline: none; border-color: var(--muted); }
+        .gate-content input::placeholder { color: var(--muted); }
+        .gate-error { color: #dc2626; font-size: 0.75rem; font-family: 'IBM Plex Mono', monospace; opacity: 0; transition: opacity 0.2s; }
+        .gate-error.visible { opacity: 1; }
+
+        /* Layout */
+        .container { width: 100%; max-width: 680px; margin: 0 auto; padding: 60px 24px 80px; }
+        #main { display: none; }
+        #main.visible { display: block; }
+
+        /* Header */
+        header { margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .logo { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1.25rem; letter-spacing: -0.03em; margin-bottom: 4px; }
+        .subtitle { font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; color: var(--muted); letter-spacing: 0.02em; }
+
+        /* Hero image */
+        .hero-image { width: 100%; height: auto; margin-bottom: 40px; }
+
+        /* Sections */
+        section { margin-bottom: 40px; }
+        .section-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; color: var(--muted); letter-spacing: 0.02em; margin-bottom: 16px; }
+        p { font-size: 0.9375rem; line-height: 1.65; margin-bottom: 12px; }
+        p:last-child { margin-bottom: 0; }
+
+        /* Thesis */
+        .thesis { font-size: 0.9375rem; line-height: 1.65; padding-left: 16px; border-left: 1px solid var(--border); margin: 20px 0; }
+
+        /* Tables */
+        .table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        .table tr { border-bottom: 1px solid var(--border); }
+        .table tr:last-child { border-bottom: none; }
+        .table td { padding: 10px 0; vertical-align: top; font-size: 0.9375rem; }
+        .table td:first-child { color: var(--muted); font-size: 0.8125rem; width: 140px; padding-right: 16px; }
+
+        /* Team */
+        .team { margin: 8px 0; }
+        .team-item { font-size: 0.9375rem; line-height: 1.65; margin-bottom: 10px; }
+        .team-role { font-size: 0.8125rem; color: var(--muted); display: block; }
+        .team a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); }
+        .team a:hover { border-color: var(--muted); }
+
+        /* Revenue lines */
+        .revenue { margin: 16px 0; }
+        .revenue-line { font-size: 0.9375rem; line-height: 1.65; margin-bottom: 6px; }
+
+        /* Timeline */
+        .timeline { margin: 16px 0; }
+        .timeline-item { display: flex; gap: 24px; padding: 8px 0; font-size: 0.9375rem; border-bottom: 1px solid var(--border); }
+        .timeline-item:last-child { border-bottom: none; }
+        .timeline-date { font-size: 0.8125rem; color: var(--muted); min-width: 90px; flex-shrink: 0; padding-top: 1px; }
+
+        /* Risk */
+        .risk { padding-left: 16px; border-left: 1px solid var(--muted); margin: 16px 0; }
+        .risk p { font-size: 0.875rem; margin-bottom: 8px; }
+
+        /* Event */
+        .event { margin: 16px 0; }
+        .event-title { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1.125rem; letter-spacing: -0.02em; margin-bottom: 4px; }
+        .event-sub { font-size: 0.875rem; color: var(--muted); margin-bottom: 16px; }
+        .event-line { display: flex; gap: 24px; padding: 8px 0; font-size: 0.9375rem; border-bottom: 1px solid var(--border); }
+        .event-line:last-child { border-bottom: none; }
+        .event-label { font-size: 0.8125rem; color: var(--muted); min-width: 80px; flex-shrink: 0; }
+
+        /* CTA */
+        .cta { text-align: center; margin: 48px 0 0; }
+        .cta-button { display: inline-block; padding: 14px 40px; background: var(--text); color: var(--bg); font-family: 'Inter', sans-serif; font-size: 0.875rem; font-weight: 500; text-decoration: none; transition: opacity 0.2s; }
+        .cta-button:hover { opacity: 0.85; }
+        .cta-secondary { text-align: center; margin-top: 16px; }
+        .cta-secondary a, .cta-secondary button { font-family: 'Inter', sans-serif; font-size: 0.8125rem; color: var(--muted); text-decoration: none; border: none; border-bottom: 1px solid var(--border); background: none; cursor: pointer; padding: 0; }
+        .cta-secondary a:hover, .cta-secondary button:hover { color: var(--text); border-color: var(--muted); }
+
+        /* Separator */
+        .sep { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+        /* Utilities */
+        .muted { color: var(--muted); }
+        .small { font-size: 0.875rem; }
+
+        /* Footer */
+        footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.8125rem; color: var(--muted); }
+        footer p { color: var(--muted); font-size: 0.8125rem; margin-bottom: 4px; }
+        footer a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border); }
+        footer a:hover { color: var(--text); border-color: var(--muted); }
+        .footer-links { margin-top: 12px; }
+        .footer-links a { margin-right: 16px; }
+        .footer-legal { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); font-family: 'IBM Plex Mono', monospace; font-size: 0.625rem; letter-spacing: 0.02em; }
+
+        /* Print */
+        @media print {
+            @page { size: A4; margin: 18mm 16mm; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            html, body { font-size: 10pt; line-height: 1.45; background: white !important; color: black !important; }
+            #gate { display: none !important; }
+            #main { display: block !important; }
+            .container { max-width: 100%; padding: 0; }
+            header { padding-bottom: 12px; margin-bottom: 20px; }
+            .logo { font-size: 1.1rem; }
+            .hero-image { max-height: 180px; width: 100%; object-fit: contain; object-position: left; margin-bottom: 20px; }
+            section { margin-bottom: 20px; page-break-inside: avoid; }
+            .section-label { font-size: 0.6rem; margin-bottom: 8px; color: #666; }
+            p { font-size: 0.85rem; margin-bottom: 8px; }
+            .thesis { font-size: 0.85rem; margin: 12px 0; padding-left: 12px; }
+            .table td { padding: 6px 0; font-size: 0.85rem; }
+            .table td:first-child { color: #666; font-size: 0.75rem; }
+            .team-item { font-size: 0.85rem; margin-bottom: 6px; }
+            .team-role { font-size: 0.75rem; color: #666; }
+            .revenue-line { font-size: 0.85rem; }
+            .timeline-item { padding: 5px 0; font-size: 0.85rem; }
+            .timeline-date { font-size: 0.75rem; color: #666; }
+            .risk p { font-size: 0.8rem; }
+            .event-title { font-size: 1rem; }
+            .event-sub { font-size: 0.8rem; color: #666; }
+            .event-line { padding: 5px 0; font-size: 0.85rem; }
+            .event-label { font-size: 0.75rem; color: #666; }
+            .cta { display: none !important; }
+            .cta-secondary { display: none !important; }
+            .sep { margin: 20px 0; }
+            footer { margin-top: 24px; padding-top: 12px; font-size: 0.7rem; page-break-inside: avoid; }
+            footer .footer-links { margin-top: 6px; }
+            footer .footer-legal { margin-top: 8px; padding-top: 6px; font-size: 0.6rem; }
+            a { color: inherit; text-decoration: none; border: none !important; }
+            .muted { color: #666 !important; }
+            .small { font-size: 0.8rem; }
+            h2, h3, .section-label { page-break-after: avoid; }
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .container { padding: 40px 20px 60px; }
+            .table td:first-child { width: 110px; font-size: 0.75rem; }
+            .timeline-item { flex-direction: column; gap: 2px; }
+            .timeline-date { min-width: auto; }
+            .event-line { flex-direction: column; gap: 2px; }
+            .event-label { min-width: auto; }
+            .cta-button { display: block; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div id="gate">
+        <div class="gate-content">
+            <h1>LYN.</h1>
+            <input type="password" id="password" placeholder="password" autocomplete="off">
+            <div class="gate-error" id="gate-error">incorrect</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <main id="main">
+            <header>
+                <div class="logo">LYN.</div>
+                <div class="subtitle">February 2026 · Confidential</div>
+            </header>
+
+            <!-- HERO -->
+            <img src="images/config-preview.png" alt="LYN sauna configuration" class="hero-image">
+
+            <!-- PRODUCT -->
+            <section>
+                <div class="section-label">Product</div>
+                <p>LYN is a modular sauna system. 7 modules. One design. 2,100 numbered outdoor units, forever limited. Indoor installations are bespoke, uncapped.</p>
+                <div class="thesis">
+                    The M4 module integrates bitcoin mining hardware. Same electricity heats the space and generates hashrate. Heat that would be wasted becomes work.<br><br>
+                    2,100 units. 2,100 potential nodes. Distributed hashrate through architecture people actually want.
+                </div>
+            </section>
+
+            <!-- STATUS -->
+            <section>
+                <div class="section-label">Status</div>
+                <table class="table">
+                    <tr><td>Design</td><td>Finalized. Groundwork Studio.</td></tr>
+                    <tr><td>Manufacturing</td><td>KOERNER Saunabau. Founding manufacturer. Spec locked.</td></tr>
+                    <tr><td>Prototype</td><td>In build at KOERNER, Albstadt.</td></tr>
+                    <tr><td>Stove</td><td>KOERNER stove standard for indoor and commercial.</td></tr>
+                    <tr><td>Unit Economics</td><td>Target: end of March 2026.</td></tr>
+                    <tr><td>Unit #001</td><td>Looking for location — Copenhagen or Lugano.</td></tr>
+                    <tr><td>Orders</td><td>Ready to take today.</td></tr>
+                </table>
+            </section>
+
+            <!-- MARKET -->
+            <section>
+                <div class="section-label">Market</div>
+                <table class="table">
+                    <tr><td>Numbered Units</td><td>2,100</td></tr>
+                    <tr><td>Price Range</td><td>€50k–150k+</td></tr>
+                    <tr><td>Outdoor TAR</td><td>€105M+</td></tr>
+                    <tr><td>Indoor Bespoke</td><td>Uncapped</td></tr>
+                </table>
+                <div class="revenue" style="margin-top: 20px;">
+                    <div class="revenue-line">Unit sales — 2,100 outdoor (numbered) + indoor bespoke (uncapped)</div>
+                    <div class="revenue-line">Spa/Residence — sessions, events, offsites from the reference unit</div>
+                    <div class="revenue-line">Network — licensing fees from partner manufacturing</div>
+                </div>
+                <p class="muted small" style="margin-top: 12px;">Finite by design. No second production run.</p>
+            </section>
+
+            <!-- TEAM -->
+            <section>
+                <div class="section-label">Team & Partners</div>
+                <div class="team">
+                    <div class="team-item">
+                        <span class="team-role">Founder</span>
+                        Julius Schulze-Berge, Copenhagen · ex Vipp, Trustpilot, Usercentrics
+                    </div>
+                    <div class="team-item">
+                        <span class="team-role">Design</span>
+                        Morten Bo Jensen, <a href="https://www.studiogroundwork.com/" target="_blank" rel="noopener noreferrer">Groundwork Studio</a>
+                    </div>
+                    <div class="team-item">
+                        <span class="team-role">Founding Manufacturer</span>
+                        <a href="https://www.sauna-koerner.de/en/" target="_blank" rel="noopener noreferrer">KOERNER Saunabau</a>, Albstadt, Germany
+                    </div>
+                    <div class="team-item">
+                        <span class="team-role">M4 Integration</span>
+                        In collaboration with Orange Wheel + 21Energy
+                    </div>
+                </div>
+            </section>
+
+            <hr class="sep">
+
+            <!-- GROWTH CREDIT -->
+            <section>
+                <div class="section-label">Growth Credit</div>
+                <p>Profit-participating loan. Revenue-linked. Capped return.</p>
+                <table class="table">
+                    <tr><td>Raise</td><td>€100,000 – €210,000</td></tr>
+                    <tr><td>Target Return</td><td>2.5×</td></tr>
+                    <tr><td>Payment</td><td>40% of net margin, paid quarterly</td></tr>
+                    <tr><td>Term</td><td>48 months (hard cap)</td></tr>
+                    <tr><td>Security</td><td>Floating charge + founder guarantee</td></tr>
+                    <tr><td>Min. Ticket</td><td>€25,000</td></tr>
+                </table>
+                <p class="muted small" style="margin-top: 16px;">Net margin = Revenue − COGS − Operating costs (founder salary capped)</p>
+                <p class="muted small">Terms are a starting point. Open to structuring for thesis-aligned investors.</p>
+            </section>
+
+            <!-- PATH TO RETURN -->
+            <section>
+                <div class="section-label">Path to Return</div>
+                <p class="small">Investors receive 40% of net margin quarterly until 2.5× return is reached or 48 months elapse — whichever comes first.</p>
+                <p class="small">Payments within 30 days of quarter end, accompanied by unaudited financials.</p>
+                <p class="small">At 48 months, if target not reached: investors may elect to extend, negotiate settlement, or enforce security.</p>
+                <p class="muted small">Payment priority: senior to equity distributions.</p>
+            </section>
+
+            <!-- USE OF FUNDS -->
+            <section>
+                <div class="section-label">Use of Funds</div>
+                <table class="table">
+                    <tr><td>Unit #001</td><td>Commercial spa build (indoor/outdoor). Monthly revenue from sessions, events, offsites.</td></tr>
+                    <tr><td>Manufacturing</td><td>Prototype completion and first production run with KOERNER.</td></tr>
+                    <tr><td>Tech</td><td>Configurator, site planning tools, M4 integration.</td></tr>
+                    <tr><td>Operations</td><td>Legal structure, compliance, sales infrastructure.</td></tr>
+                </table>
+            </section>
+
+            <!-- TIMELINE -->
+            <section>
+                <div class="section-label">Timeline</div>
+                <div class="timeline">
+                    <div class="timeline-item"><span class="timeline-date">Q1 2026</span><span>Prototype complete. Unit economics finalized. Close growth credit.</span></div>
+                    <div class="timeline-item"><span class="timeline-date">Q2 2026</span><span>Unit #001 operational. First sales. Lugano dinner.</span></div>
+                    <div class="timeline-item"><span class="timeline-date">Q3–Q4 2026</span><span>Spa/Residence revenue. Pipeline build.</span></div>
+                    <div class="timeline-item"><span class="timeline-date">2027+</span><span>Scale production. Network expansion.</span></div>
+                </div>
+            </section>
+
+            <!-- RISK -->
+            <section>
+                <div class="section-label">Risk</div>
+                <div class="risk">
+                    <p>High-risk venture investment in an early-stage business with no operating history.</p>
+                    <p>Returns are tied to revenue performance. You may lose your entire investment. No secondary market exists.</p>
+                    <p class="muted">For sophisticated investors only.</p>
+                </div>
+            </section>
+
+            <!-- LUGANO -->
+            <section>
+                <div class="section-label">Proof of Heat</div>
+                <div class="event">
+                    <div class="event-title">Lugano</div>
+                    <div class="event-sub">Private dinner. April 2026.</div>
+                    <div class="event-line"><span class="event-label">Location</span><span>Lugano, Switzerland</span></div>
+                    <div class="event-line"><span class="event-label">Date</span><span>April 2026</span></div>
+                    <div class="event-line"><span class="event-label">Capacity</span><span>10 seats</span></div>
+                    <div class="event-cta">
+                        <a href="mailto:jsb@lyn.page?subject=Lugano%20%C2%B7%20Proof%20of%20Heat">Request Access →</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA -->
+            <div class="cta">
+                <a href="mailto:jsb@lyn.page?subject=Growth%20Credit" class="cta-button">Schedule Call</a>
+            </div>
+            <div class="cta-secondary">
+                <button onclick="window.print()">Download PDF</button>
+            </div>
+
+            <footer>
+                <p><strong>LYN.</strong></p>
+                <div class="footer-links">
+                    <a href="https://lyn.page">lyn.page</a>
+                    <a href="https://siteplanning.lyn.page" target="_blank" rel="noopener noreferrer">Site Planning</a>
+                    <a href="mailto:jsb@lyn.page">Contact</a>
+                </div>
+                <div class="footer-legal">Strictly Confidential · Not for Distribution · Qualified Investors Only</div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const CONFIG = { password: 'lyn2100' };
+        const gate = document.getElementById('gate');
+        const main = document.getElementById('main');
+        const passwordInput = document.getElementById('password');
+        const gateError = document.getElementById('gate-error');
+
+        passwordInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                if (passwordInput.value === CONFIG.password) {
+                    gate.classList.add('hidden');
+                    main.classList.add('visible');
+                    sessionStorage.setItem('lyn-invest-auth', 'true');
+                } else {
+                    gateError.classList.add('visible');
+                    passwordInput.value = '';
+                    setTimeout(() => gateError.classList.remove('visible'), 2000);
+                }
+            }
+        });
+
+        if (sessionStorage.getItem('lyn-invest-auth') === 'true') {
+            gate.classList.add('hidden');
+            main.classList.add('visible');
+        }
+    </script>
+</body>
+</html>
